@@ -8,8 +8,6 @@ import javax.swing.*;
 
 public class Tnnk extends JPanel implements KeyListener {
 
-    int wasTwenty = 18;
-    
     ArrayList<Point> list = new ArrayList<>();
     ArrayList<Point> list2 = new ArrayList<>();
     ArrayList<Point> points = new ArrayList<>();
@@ -24,12 +22,12 @@ public class Tnnk extends JPanel implements KeyListener {
 
     int power = 110;
     int power2 = 110;
-    int animationSpeed = 5;
-    static final double G = 980d;
+    int animationSpeed = 1;
+    static final double G = 980.00;
     static int size = 900, ballDiameter = 10;
     double startX, startY, ballX, ballY;
     double xSpeed, ySpeed, lastPointX, lastPointY;
-    double time, deltaTime = 0.01 ;
+    double time, deltaTime = 0.002;
     Timer timer;
 
     boolean s = true;
@@ -47,6 +45,8 @@ public class Tnnk extends JPanel implements KeyListener {
 
     int diffX = 111110, diffY = 111110;
 
+    int was = 18;
+    
     Graphics g = null;    
     JFrame j = new JFrame();
 
@@ -170,7 +170,7 @@ public class Tnnk extends JPanel implements KeyListener {
         }
         if(starting)
         for(int i=0; i<24; i++) {
-            int v = 200 + rand.nextInt(50);
+            int v = 300 + rand.nextInt(80);
             Point o = new Point();
             o.x = i*50;
             o.y = v;
@@ -217,12 +217,6 @@ public class Tnnk extends JPanel implements KeyListener {
                 points.add(o);
             }
         }
-        try {
-            tnk = new Tnk(list.get(3).x, list.get(3).y);
-            tnk2 = new Tnk2(list.get((wasTwenty)).x, list.get((wasTwenty)).y);
-            tnk.drawMe();
-            tnk2.drawMe();
-        } catch(Exception e3) {}
         if(starting)
         for(int i=0; i<122; i++) {
             int v = 20 + rand.nextInt(130);
@@ -285,31 +279,31 @@ public class Tnnk extends JPanel implements KeyListener {
         if(starting)
             starting = false;
         
-        g.setColor(Color.GRAY);
-        g.fillOval(1000, 50, 100, 100);
-        g.setColor(new Color(150, 150, 150));
-        g.fillOval(1030, 60, 20, 20);
-        g.setColor(new Color(150, 150, 150));
-        g.fillOval(1060, 80, 20, 20);
-        g.setColor(new Color(150, 150, 150));
-        g.fillOval(1030, 100, 20, 20);
+        g2.setColor(Color.GRAY);
+        g2.fillOval(1000, 50, 100, 100);
+        g2.setColor(new Color(150, 150, 150));
+        g2.fillOval(1030, 60, 20, 20);
+        g2.setColor(new Color(150, 150, 150));
+        g2.fillOval(1060, 80, 20, 20);
+        g2.setColor(new Color(150, 150, 150));
+        g2.fillOval(1030, 100, 20, 20);
 
-        g.setColor(Color.BLUE);
+        g2.setColor(Color.BLUE);
 
-        g.setFont(new Font("arial", Font.PLAIN, 25));
-        g.drawString("Tank Fighter 2", 100, 30);
+        g2.setFont(new Font("arial", Font.PLAIN, 25));
+        g2.drawString("Tank Fighter 2", 100, 30);
         
-        g.setFont(new Font("arial", Font.PLAIN, 15));
-        g.setColor(Color.RED);
-        g.drawString("RED: POWER: " + power + "   ANGLE: " + aangle, 100, 70);
-        g.setColor(Color.GREEN);
-        g.drawString("GREEN: POWER: " + power2 + "   ANGLE: " + aangle2, 100, 100);
+        g2.setFont(new Font("arial", Font.PLAIN, 15));
+        g2.setColor(Color.RED);
+        g2.drawString("RED: POWER: " + power + "   ANGLE: " + aangle, 100, 70);
+        g2.setColor(Color.GREEN);
+        g2.drawString("GREEN: POWER: " + power2 + "   ANGLE: " + aangle2, 100, 100);
 
-        g.setColor(Color.BLACK);
+        g2.setColor(Color.BLACK);
         
-        g.drawString("Power: LEFT / RIGHT", 100, 140);
-        g.drawString("Angle: UP / DOWN", 100, 170);
-        g.drawString("To shoot press SPACE", 100, 200);
+        g2.drawString("Power: LEFT / RIGHT", 100, 140);
+        g2.drawString("Angle: UP / DOWN", 100, 170);
+        g2.drawString("To shoot press SPACE", 100, 200);
     }
 
     private void drawExplosion(int x, int y) {
@@ -459,6 +453,7 @@ public class Tnnk extends JPanel implements KeyListener {
             drawExplosion(minX,minY);
 
             list.remove(list.get(listFound+1));
+            list.remove(list.get(listFound+2));
 
             Point l = new Point();
             l.x = (int) minX + 2;
@@ -475,23 +470,45 @@ public class Tnnk extends JPanel implements KeyListener {
             list.get(listFound+1).x = list.get(listFound+1).x;
             list.get(listFound+1).y = l.y + 30;
 
-            list.get(listFound+2).x = list.get(listFound+2).x;
-            list.get(listFound+2).y = l.y + 30;
+//            list.get(listFound+2).x = list.get(listFound+2).x;
+//            list.get(listFound+2).y = l.y + 30;
 
-            wasTwenty++;
+            was++;
             
             time = -1;
-            
-            if(turn.equals("red")) {
-                turn = "green";
-            } else if(turn.equals("green")) {
-                turn = "red";
-            }
 
             shooting = false;
         }
 
         repaint();
+
+        if(!shooting) {
+            if(turn.equals("red")) {
+
+                try {
+                    tnk = new Tnk(list.get(3).x, list.get(3).y);
+                    angle = 0;
+                    aangle = 0;
+                    s = true;
+                    tnk.drawMe();
+                } catch(Exception e3) {}
+
+                turn = "green";
+
+            } else if(turn.equals("green")) {
+
+                try {
+                    tnk2 = new Tnk2(list.get((18)).x, list.get((18)).y);
+                    angle2 = 0;
+                    aangle2 = 0;
+                    s2 = true;
+                    tnk2.drawMe();
+                } catch(Exception e3) {}
+
+                turn = "red";
+
+            }
+        }
     }
 
     private void getUserInput() {
